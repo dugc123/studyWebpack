@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{84:function(n,e,o){"use strict";function t(n,e){return n-e}o.r(e),o.d(e,"reduce",(function(){return t})),console.log("test文件加载了 -----\x3e> ")}}]);

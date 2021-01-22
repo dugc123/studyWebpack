@@ -1,0 +1,49 @@
+const {resolve} = require("path");
+const htmlWebpackPlugin = require("html-webpack-plugin")
+
+module.exports={
+    entry:"./src/js/index.js",
+    output:{
+        //[name]：取文件名
+        filename:"js/[name].js",
+        path:resolve(__dirname,"build")
+    },
+    module:{
+        rules:[
+                {
+                    test:/\.js$/,
+                    exclude:/node_modules/,
+                    loader:'babel-loader',
+                    options:{
+                        presets:[
+                            [
+                                "@babel/preset-env",
+                                {
+                                    useBuiltIns:'usage',
+                                    corejs:{
+                                        version:3
+                                    },
+                                    targets:{
+                                        chrome:'60',
+                                        firefox:'50',
+                                        ie:'7',
+                                        safari:'8'
+                                    }
+                                }
+                            ]
+                        ]
+                    }
+                }
+            ]
+    },
+    plugins:[
+        new htmlWebpackPlugin({
+            template:"./src/index.html",
+            minify:{
+                collapseWhitespace:true,
+                removeComments:true
+            }
+        })
+    ],
+    mode:"production"
+}

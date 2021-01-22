@@ -1,0 +1,75 @@
+const {resolve} = require("path");
+const htmlWebpackPlugin = require("html-webpack-plugin")
+//定义nodejs的环境变量，决定使用browserslist的哪个环境
+process.env.NODE_ENV="development";
+
+module.exports={
+    entry:{
+        //多入口：有一个入口，最终输出就有一个bundle
+        main:"./src/js/index.js",
+        test:"./src/js/test.js"
+    },
+    output:{
+        //[name]：取文件名
+        filename:"js/[name].[contenthash:10].js",
+        path:resolve(__dirname,"build")
+    },
+    module:{
+        rules:[
+                {
+                    test:/\.js$/,
+                    exclude:/node_modules/,
+                    loader:'babel-loader',
+                    options:{
+                        presets:[
+                            [
+                                "@babel/preset-env",
+                                {
+                                    useBuiltIns:'usage',
+                                    corejs:{
+                                        version:3
+                                    },
+                                    targets:{
+                                        chrome:'60',
+                                        firefox:'50',
+                                        ie:'7',
+                                        safari:'8'
+                                    }
+                                }
+                            ]
+                        ],
+                        //开启babel缓存
+                        //第二次构建，会读取之前的缓存
+                        cacheDirectory:true
+                    }
+                },{
+                    test:/\.(jpg|png|gif)/,
+                    loader:'url-loader',
+                    options:{
+                        limit:20 * 1024,
+                        name:"[hash:10].[ext]",
+                        outputPath:"imgs"
+                    }
+                },{
+                    test:/\.html$/,
+                    loader:'html-loader'
+                },{
+                    exclude:/\.(js|css|less|jpg|png|html|gif)/,
+                    loader:'file-loader',
+                    options:{
+                        outputPath:"media"
+                    }
+                }
+            ]
+    },
+    plugins:[
+        new htmlWebpackPlugin({
+            template:"./src/index.html",
+            minify:{
+                collapseWhitespace:true,
+                removeComments:true
+            }
+        })
+    ],
+    mode:"production",
+}
